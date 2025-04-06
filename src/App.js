@@ -7,7 +7,9 @@ import Calculator from "./pages/Calculator";
 import FlowRate from "./pages/FlowRate";
 import FlowSpeed from "./pages/FlowSpeed";
 import PressureLoss from "./pages/PressureLoss";
+import AirReleaseValvePlacement from "./pages/AirReleaseValvePlacement";
 import FlowGraphs from "./pages/FlowGraphs";
+import Other from "./pages/Other";
 import TechnicalDrawings from "./pages/TechnicalDrawings";
 
 function App() {
@@ -19,7 +21,9 @@ function App() {
         <Route path="/calculator/flow-rate" element={<FlowRate />} />
         <Route path="/calculator/flow-speed" element={<FlowSpeed />} />
         <Route path="/calculator/pressure-loss" element={<PressureLoss />} />
+        <Route path="/calculator/other" element={<Other />} />
         <Route path="/flow-graphs" element={<FlowGraphs />} />
+        <Route path="/air-release-valve-placement" element={<AirReleaseValvePlacement />} />
         <Route path="/technical-drawings" element={<TechnicalDrawings />} />
       </Routes>
     </Router>

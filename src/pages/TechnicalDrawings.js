@@ -1,4 +1,4 @@
-// src/pages/Placeholder.jsx
+// src/pages/TechnicalDrawings.js
 export default function TechnicalDrawings() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">

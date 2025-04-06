@@ -16,6 +16,9 @@ export default function Calculator() {
                 <div className="calculator">
                     <Link to="/calculator/pressure-loss">Pressure Loss Calculator</Link>
                 </div>
+                <div className="calculator">
+                    <Link to="/calculator/other">Other</Link>
+                </div>
             </div>
             <BackButtons />
         </>
