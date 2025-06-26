@@ -1,0 +1,33 @@
+// This file holds the sample data for Zeta vs. Valve Opening.
+// Using named exports is a clean way to export multiple items from a single file.
+
+// Zeta values for a valve WITHOUT a slotter.
+export const zetaDataSlotless = [
+    { opening: 0, zeta: Infinity },
+    { opening: 10, zeta: 200 },
+    { opening: 20, zeta: 100 },
+    { opening: 30, zeta: 50 },
+    { opening: 40, zeta: 30 },
+    { opening: 50, zeta: 20 },
+    { opening: 55, zeta: 15 },
+    { opening: 60, zeta: 10 },
+    { opening: 70, zeta: 5 },
+    { opening: 80, zeta: 3 },
+    { opening: 90, zeta: 2 },
+    { opening: 100, zeta: 1.5 },
+];
+
+// Zeta values for a valve WITH a slotter.
+export const zetaDataSlotted = [
+    { opening: 0, zeta: Infinity },
+    { opening: 10, zeta: 500 },
+    { opening: 20, zeta: 250 },
+    { opening: 30, zeta: 120 },
+    { opening: 40, zeta: 60 },
+    { opening: 50, zeta: 35 },
+    { opening: 60, zeta: 20 },
+    { opening: 70, zeta: 10 },
+    { opening: 80, zeta: 5 },
+    { opening: 90, zeta: 3 },
+    { opening: 100, zeta: 2.5 },
+];

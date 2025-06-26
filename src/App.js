@@ -11,6 +11,7 @@ import AirReleaseValvePlacement from "./pages/AirReleaseValvePlacement";
 import FlowGraphs from "./pages/FlowGraphs";
 import Other from "./pages/Other";
 import TechnicalDrawings from "./pages/TechnicalDrawings";
+import NeedleValve from "./pages/NeedleValve"; // Import the new page
 
 function App() {
   return (
@@ -23,8 +24,12 @@ function App() {
         <Route path="/calculator/pressure-loss" element={<PressureLoss />} />
         <Route path="/calculator/other" element={<Other />} />
         <Route path="/flow-graphs" element={<FlowGraphs />} />
-        <Route path="/air-release-valve-placement" element={<AirReleaseValvePlacement />} />
+        <Route
+          path="/air-release-valve-placement"
+          element={<AirReleaseValvePlacement />}
+        />
         <Route path="/technical-drawings" element={<TechnicalDrawings />} />
+        <Route path="/needle-valve" element={<NeedleValve />} /> {/* Add the new route */}
       </Routes>
     </Router>
   );

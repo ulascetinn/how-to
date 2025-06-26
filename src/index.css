@@ -131,3 +131,98 @@ th {
   background-color: #002f6c;
   color: #ffffff;
 }
+
+/* Needle Valve Page Styles */
+.input-section {
+  background-color: #d0dae5;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.input-section h2 {
+  color: #002f6c;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #0059b3;
+  padding-bottom: 10px;
+}
+
+.needle-valve-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  /* Reduced gap slightly */
+  align-items: center;
+}
+
+.needle-valve-inputs div {
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+  /* Add padding for spacing */
+  border-right: 1px solid #a8b9c9;
+  /* Add separator line */
+}
+
+.needle-valve-inputs div:last-child {
+  border-right: none;
+  /* Remove border from the last item */
+}
+
+
+.needle-valve-inputs label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #002f6c;
+  text-transform: capitalize;
+}
+
+.needle-valve-inputs span {
+  align-self: flex-end;
+  margin-top: -25px;
+  margin-right: 5px;
+  color: #555;
+  font-size: 0.9em;
+}
+
+
+.needle-valve-table {
+  width: 100%;
+}
+
+.needle-valve-table input,
+.needle-valve-table select {
+  width: 90%;
+  box-sizing: border-box;
+  /* Ensure padding doesn't affect width */
+}
+
+.needle-valve-table td:first-child {
+  font-weight: bold;
+  color: #002f6c;
+  text-align: left;
+  text-transform: capitalize;
+}
+
+.input-themed {
+  background-color: #f0f5fa;
+  /* A very light blue for inputs */
+  border: 1px solid #a8b9c9;
+  text-align: center;
+  /* Center text inside inputs */
+}
+
+.result-row-good td {
+  background-color: #d4edda;
+  /* Muted green for good results */
+  font-weight: bold;
+  color: #155724;
+}
+
+.result-row-bad td {
+  background-color: #f8d7da;
+  /* Muted red for bad results */
+  font-weight: bold;
+  color: #721c24;
+}
