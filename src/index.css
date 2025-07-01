@@ -226,3 +226,24 @@ th {
   font-weight: bold;
   color: #721c24;
 }
+
+.result-row-good td {
+  background-color: #d4edda;
+  /* Muted green for good results */
+  font-weight: bold;
+  color: #155724;
+}
+
+.result-row-medium td {
+  background-color: #ffdddd;
+  /* Lighter red for medium results */
+  font-weight: bold;
+  color: #721c24;
+}
+
+.result-row-bad td {
+  background-color: #f8d7da;
+  /* Muted red for bad results */
+  font-weight: bold;
+  color: #721c24;
+}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import BackButtons from '../components/BackButtons';
-import { flowRateUnits, pressureUnits, convertFlowRate } from '../utils/units';
-import zetas from '../utils/zetaData';
+import { flowRateUnits, pressureUnits, convertFlowRate, convertPressure } from '../utils/units';
+import * as zetas from '../utils/zetaData';
 import '../index.css';
 
 // Initial state for a single case column
@@ -11,7 +11,8 @@ const initialCaseState = {
     velocity: '',
     inlet: '25.00',
     outlet: '16.00',
-    dP: '9.00',
+    dP: '',
+    dpBar: '',
     slotlessOpening: '',
     slottedOpening: ''
 };
@@ -63,26 +64,27 @@ const NeedleValve = () => {
             return '';
         };
 
-        // Update each case with new calculations.
-        setCaseA(prev => ({
-            ...prev,
-            velocity: calculateVelocity(prev.flowRate, flowRateUnit, valveDN),
-            dP: calculateDp(prev.inlet, prev.outlet)
-        }));
-        setCaseB(prev => ({
-            ...prev,
-            velocity: calculateVelocity(prev.flowRate, flowRateUnit, valveDN),
-            dP: calculateDp(prev.inlet, prev.outlet)
-        }));
-        setCaseC(prev => ({
-            ...prev,
-            velocity: calculateVelocity(prev.flowRate, flowRateUnit, valveDN),
-            dP: calculateDp(prev.inlet, prev.outlet)
-        }));
+        const updateCase = (caseSetter) => {
+            caseSetter(prev => {
+                const dP = calculateDp(prev.inlet, prev.outlet);
+                const dpBar = convertPressure(dP, pressureUnit, 'bar');
+                return {
+                    ...prev,
+                    velocity: calculateVelocity(prev.flowRate, flowRateUnit, valveDN),
+                    dP,
+                    dpBar: dpBar.toFixed(2)
+                }
+            });
+        }
+
+        updateCase(setCaseA);
+        updateCase(setCaseB);
+        updateCase(setCaseC);
 
     }, [
         valveDN,
         flowRateUnit,
+        pressureUnit,
         caseA.flowRate, caseB.flowRate, caseC.flowRate,
         caseA.inlet, caseA.outlet,
         caseB.inlet, caseB.outlet,
@@ -140,7 +142,7 @@ const NeedleValve = () => {
 
         // Helper to process each case
         const processCase = (caseData) => {
-            const zeta = calculateZeta(caseData.velocity, caseData.dP);
+            const zeta = calculateZeta(caseData.velocity, caseData.dpBar);
             return {
                 slotlessOpening: findOpeningRange(zeta, zetas.zetaDataSlotless),
                 slottedOpening: findOpeningRange(zeta, zetas.zetaDataSlotted),
@@ -150,6 +152,19 @@ const NeedleValve = () => {
         setCaseA(prev => ({ ...prev, ...processCase(prev) }));
         setCaseB(prev => ({ ...prev, ...processCase(prev) }));
         setCaseC(prev => ({ ...prev, ...processCase(prev) }));
+    };
+
+    const getOpeningClass = (opening) => {
+        if (!opening || typeof opening !== 'string') return '';
+        const lowerBound = parseFloat(opening.split('-')[0].replace('<', '').replace('≥', '').trim());
+        if (isNaN(lowerBound)) return '';
+        if ((lowerBound >= 0 && lowerBound <= 10) || lowerBound >= 80) {
+            return 'result-row-bad';
+        }
+        if (lowerBound > 10 && lowerBound < 20) {
+            return 'result-row-medium';
+        }
+        return 'result-row-good';
     };
 
     return (
@@ -240,14 +255,21 @@ const NeedleValve = () => {
                                 <td>{caseB.dP}</td>
                                 <td>{caseC.dP}</td>
                             </tr>
-                            <tr className="result-row-good">
+                            <tr>
+                                <td>&Delta;P (bar)</td>
+                                <td>{caseA.dpBar}</td>
+                                <td>{caseB.dpBar}</td>
+                                <td>{caseC.dpBar}</td>
+                                <td>bar</td>
+                            </tr>
+                            <tr className={getOpeningClass(caseA.slotlessOpening)}>
                                 <td>Opening w/o slotter</td>
                                 <td>{caseA.slotlessOpening}</td>
                                 <td>{caseB.slotlessOpening}</td>
                                 <td>{caseC.slotlessOpening}</td>
                                 <td>%</td>
                             </tr>
-                            <tr className="result-row-good">
+                            <tr className={getOpeningClass(caseA.slottedOpening)}>
                                 <td>Opening w/ slotter</td>
                                 <td>{caseA.slottedOpening}</td>
                                 <td>{caseB.slottedOpening}</td>
