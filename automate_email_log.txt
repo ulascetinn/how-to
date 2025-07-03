@@ -331,3 +331,55 @@
 2025-07-01 09:43:54,926 - INFO - Successfully ran macro 'Hyperlink_Year' in '\\Ozkanfile\ozkan\PM&RD\calculation_reports\Summary_of_Calculations.xlsm'.
 2025-07-01 09:43:57,888 - INFO - Script executed successfully for folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250144
 2025-07-01 09:43:57,891 - INFO - Total execution time: 52.62 seconds.
+2025-07-01 11:47:34,503 - ERROR - Unexpected error checking if Excel file is open: 'Workbook' object does not support the context manager protocol
+2025-07-01 11:48:54,699 - INFO - Created folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250145
+2025-07-01 11:48:54,923 - INFO - Email saved to: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250145\1 FW LOji Air Iskandar Package 1 , Nozzle Check valve  Dn 700  4 nos.msg
+2025-07-01 11:48:55,060 - INFO - Attachment saved to: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250145\Dn 700Nozzle CV pump drg layout.pdf
+2025-07-01 11:48:59,156 - INFO - Created Word document: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250145\Notes.docx
+2025-07-01 11:49:01,016 - INFO - Added hyperlink to email for folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250145
+2025-07-01 11:49:01,409 - DEBUG - Initial max_row: 2371
+2025-07-01 11:49:01,409 - DEBUG - Checking A2371: '20250144'
+2025-07-01 11:49:01,409 - DEBUG - Next row determined for insertion: 2372
+2025-07-01 11:49:01,409 - DEBUG - Writing Calculation Number: 20250145 to A2372
+2025-07-01 11:49:01,409 - DEBUG - Writing Year: 2025 to C2372
+2025-07-01 11:49:01,409 - DEBUG - Writing Sent Date: 01.07.25 to D2372
+2025-07-01 11:49:01,409 - DEBUG - Writing Sender Name: Veli Keni to E2372
+2025-07-01 11:49:01,849 - INFO - Updated Excel summary at row 2372.
+2025-07-01 11:49:06,233 - INFO - Successfully ran macro 'Hyperlink_Year' in '\\Ozkanfile\ozkan\PM&RD\calculation_reports\Summary_of_Calculations.xlsm'.
+2025-07-01 11:50:06,960 - INFO - Script executed successfully for folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250145
+2025-07-01 11:50:06,972 - INFO - Total execution time: 152.57 seconds.
+2025-07-02 10:41:17,721 - ERROR - Unexpected error checking if Excel file is open: 'Workbook' object does not support the context manager protocol
+2025-07-02 10:41:44,554 - INFO - Created folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146
+2025-07-02 10:41:44,847 - INFO - Email saved to: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146\1 RE Koski Ýðne Vana.msg
+2025-07-02 10:41:45,131 - INFO - Attachment saved to: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146\I\u0307G\u0306NE VANA TEKNI\u0307K S\u0327ARTNAMESI\u0307 (SEC\u0327ME ARITMA).docx
+2025-07-02 10:41:45,284 - INFO - Attachment saved to: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146\Koski DN1200 PN16 Ýðne Vana.pdf
+2025-07-02 10:41:46,602 - INFO - Created Word document: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146\Notes.docx
+2025-07-02 10:41:47,137 - INFO - Added hyperlink to email for folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146
+2025-07-02 10:41:47,548 - DEBUG - Initial max_row: 2372
+2025-07-02 10:41:47,548 - DEBUG - Checking A2372: '20250145'
+2025-07-02 10:41:47,548 - DEBUG - Next row determined for insertion: 2373
+2025-07-02 10:41:47,548 - DEBUG - Writing Calculation Number: 20250146 to A2373
+2025-07-02 10:41:47,548 - DEBUG - Writing Year: 2025 to C2373
+2025-07-02 10:41:47,548 - DEBUG - Writing Sent Date: 02.07.25 to D2373
+2025-07-02 10:41:47,548 - DEBUG - Writing Sender Name: Onur Ceylan to E2373
+2025-07-02 10:41:48,083 - INFO - Updated Excel summary at row 2373.
+2025-07-02 10:41:52,747 - INFO - Successfully ran macro 'Hyperlink_Year' in '\\Ozkanfile\ozkan\PM&RD\calculation_reports\Summary_of_Calculations.xlsm'.
+2025-07-02 10:42:53,611 - INFO - Copied '\\Ozkanfile\ozkan\PM&RD\Application\3 Needle Valve Opening Calculation_NEW_v7.xlsm' to '\\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146\CALC20250146.xlsm'.
+2025-07-02 10:42:53,611 - INFO - Script executed successfully for folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250146
+2025-07-02 10:42:53,627 - INFO - Total execution time: 96.00 seconds.
+2025-07-02 14:51:00,629 - ERROR - Unexpected error checking if Excel file is open: 'Workbook' object does not support the context manager protocol
+2025-07-02 15:34:06,421 - INFO - Created folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250147
+2025-07-02 15:34:06,616 - INFO - Email saved to: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250147\1 309316 kaynak farký.msg
+2025-07-02 15:34:11,793 - INFO - Created Word document: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250147\Notes.docx
+2025-07-02 15:34:14,670 - INFO - Added hyperlink to email for folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250147
+2025-07-02 15:34:15,320 - DEBUG - Initial max_row: 2373
+2025-07-02 15:34:15,320 - DEBUG - Checking A2373: '20250146'
+2025-07-02 15:34:15,320 - DEBUG - Next row determined for insertion: 2374
+2025-07-02 15:34:15,320 - DEBUG - Writing Calculation Number: 20250147 to A2374
+2025-07-02 15:34:15,320 - DEBUG - Writing Year: 2025 to C2374
+2025-07-02 15:34:15,320 - DEBUG - Writing Sent Date: 02.07.25 to D2374
+2025-07-02 15:34:15,320 - DEBUG - Writing Sender Name: Veli Keni to E2374
+2025-07-02 15:34:15,788 - INFO - Updated Excel summary at row 2374.
+2025-07-02 15:34:20,613 - INFO - Successfully ran macro 'Hyperlink_Year' in '\\Ozkanfile\ozkan\PM&RD\calculation_reports\Summary_of_Calculations.xlsm'.
+2025-07-02 15:35:21,136 - INFO - Script executed successfully for folder: \\Ozkanfile\ozkan\PM&RD\calculation_reports\2025\CALC20250147
+2025-07-02 15:35:21,160 - INFO - Total execution time: 2660.73 seconds.

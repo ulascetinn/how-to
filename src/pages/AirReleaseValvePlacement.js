@@ -32,6 +32,7 @@ export default function AirReleaseValvePlacement() {
     const [tableData, setTableData] = useState([]);
     const [fillingSpeed, setFillingSpeed] = useState('0.3');
     const [showGraph, setShowGraph] = useState(false);
+    const [highPoints, setHighPoints] = useState([]);
     const fileInputRef = useRef(null);
     const chartRef = useRef(null);
 
@@ -95,13 +96,29 @@ export default function AirReleaseValvePlacement() {
             setTableData([header, ...clearedRows]);
         }
         setShowGraph(false);
+        setHighPoints([]);
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
     };
 
-    // When Place is pressed, show the graph.
+    // When Place is pressed, find high points and show the graph.
     const handlePlace = () => {
+        const points = tableData.slice(2).map(row => ({
+            chainage: parseFloat(row[1]),
+            elevation: parseFloat(row[2])
+        })).filter(p => !isNaN(p.chainage) && !isNaN(p.elevation));
+
+        const peaks = [];
+        for (let i = 1; i < points.length - 1; i++) {
+            const prev = points[i - 1];
+            const current = points[i];
+            const next = points[i + 1];
+            if (current.elevation > prev.elevation && current.elevation > next.elevation) {
+                peaks.push(i);
+            }
+        }
+        setHighPoints(peaks);
         setShowGraph(true);
     };
 
@@ -131,22 +148,23 @@ export default function AirReleaseValvePlacement() {
     };
 
     // Compute graph data from tableData.
-    // Use x-axis from column 2 (Chainage) and y-axis from column 3 (Elevation)
-    // Process rows starting at index 2 (i.e. skipping header and project title row).
     const computeGraphData = () => {
         if (!tableData || tableData.length < 3) return { labels: [], datasets: [] };
-        const labels = [];
-        const dataPoints = [];
-        // Use rows from index 2 onward.
-        for (let i = 2; i < tableData.length; i++) {
-            const row = tableData[i];
-            const chainage = parseFloat(row[1]);
-            const elevation = parseFloat(row[2]);
-            if (!isNaN(chainage) && !isNaN(elevation)) {
-                labels.push(chainage);
-                dataPoints.push(elevation);
-            }
-        }
+
+        const validPoints = tableData.slice(2).map(row => ({
+            chainage: parseFloat(row[1]),
+            elevation: parseFloat(row[2]),
+            node: row[0]
+        })).filter(p => !isNaN(p.chainage) && !isNaN(p.elevation));
+
+        const labels = validPoints.map(p => p.chainage);
+        const dataPoints = validPoints.map(p => p.elevation);
+
+        const peakData = highPoints.map(index => ({
+            x: validPoints[index].chainage,
+            y: validPoints[index].elevation
+        }));
+
         return {
             labels,
             datasets: [
@@ -159,14 +177,20 @@ export default function AirReleaseValvePlacement() {
                     fill: false,
                     tension: 0.1,
                 },
+                {
+                    label: 'Air Release Valve',
+                    data: peakData,
+                    pointBackgroundColor: 'red',
+                    pointRadius: 6,
+                    pointStyle: 'circle',
+                    showLine: false,
+                    type: 'scatter'
+                }
             ],
         };
     };
 
     // Render the table.
-    // • The header row (row index 0) is not editable.
-    // • The first data row (row index 1) is fully editable (all 4 columns, including project title).
-    // • Subsequent rows (row index ≥2) are editable only in the first 3 columns.
     const renderTable = () => {
         if (!tableData || tableData.length === 0) return <p>Loading data...</p>;
         const header = tableData[0];
@@ -185,8 +209,6 @@ export default function AirReleaseValvePlacement() {
                 <tbody>
                     {tableData.slice(1).map((row, rowIndex) => {
                         const fullRow = row.length < headerLength ? [...row, ...Array(headerLength - row.length).fill("")] : row;
-                        // For row index 0 in data (first data row): fully editable.
-                        // For rows with index >=1: only columns 0,1,2 are editable.
                         const editableAll = rowIndex === 0;
                         return (
                             <tr key={rowIndex}>
@@ -216,8 +238,6 @@ export default function AirReleaseValvePlacement() {
     };
 
     // Graph options.
-    // The chart title is taken from the project title in row 1, column 4.
-    // Tooltips display in the format: "Node X (Chainage, Elevation)"
     const graphData = computeGraphData();
     const graphOptions = {
         responsive: true,
@@ -227,15 +247,22 @@ export default function AirReleaseValvePlacement() {
                 text: tableData.length > 1 && tableData[1].length >= 4 ? tableData[1][3] : 'Project Title',
             },
             legend: {
-                display: false,
+                display: true
             },
             tooltip: {
                 callbacks: {
                     label: function (context) {
                         const idx = context.dataIndex;
-                        // Retrieve the corresponding row from tableData starting at index 2.
-                        const row = tableData[idx + 2] || [];
-                        const node = row[0] ? row[0] : "N/A";
+                        const validPoints = tableData.slice(2).map(row => ({
+                            chainage: parseFloat(row[1]),
+                            elevation: parseFloat(row[2]),
+                            node: row[0]
+                        })).filter(p => !isNaN(p.chainage) && !isNaN(p.elevation));
+
+                        const point = validPoints[idx];
+                        if (!point) return '';
+
+                        const node = point.node ? point.node : "N/A";
                         const chainage = context.chart.data.labels[idx];
                         const elevation = context.parsed.y;
                         return `Node ${node} (${chainage}, ${elevation})`;
