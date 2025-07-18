@@ -32,7 +32,7 @@ export default function AirReleaseValvePlacement() {
     const [tableData, setTableData] = useState([]);
     const [fillingSpeed, setFillingSpeed] = useState('0.3');
     const [showGraph, setShowGraph] = useState(false);
-    const [highPoints, setHighPoints] = useState([]);
+    const [placementPoints, setPlacementPoints] = useState({ peaks: [], slopeChanges: [] });
     const fileInputRef = useRef(null);
     const chartRef = useRef(null);
 
@@ -96,7 +96,7 @@ export default function AirReleaseValvePlacement() {
             setTableData([header, ...clearedRows]);
         }
         setShowGraph(false);
-        setHighPoints([]);
+        setPlacementPoints({ peaks: [], slopeChanges: [] });
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
@@ -110,15 +110,34 @@ export default function AirReleaseValvePlacement() {
         })).filter(p => !isNaN(p.chainage) && !isNaN(p.elevation));
 
         const peaks = [];
+        const slopeChanges = [];
+
         for (let i = 1; i < points.length - 1; i++) {
             const prev = points[i - 1];
             const current = points[i];
             const next = points[i + 1];
+
+            // Peak detection
             if (current.elevation > prev.elevation && current.elevation > next.elevation) {
                 peaks.push(i);
+                continue; // It's a peak, no need to check for slope change
+            }
+
+            // Slope change detection
+            const slope1 = (current.elevation - prev.elevation) / (current.chainage - prev.chainage);
+            const slope2 = (next.elevation - current.elevation) / (next.chainage - current.chainage);
+
+            // Increased downslope
+            if (slope1 < 0 && slope2 < 0 && Math.abs(slope2) > Math.abs(slope1)) {
+                slopeChanges.push(i);
+            }
+
+            // Decreased upslope
+            if (slope1 > 0 && slope2 > 0 && slope2 < slope1) {
+                slopeChanges.push(i);
             }
         }
-        setHighPoints(peaks);
+        setPlacementPoints({ peaks, slopeChanges });
         setShowGraph(true);
     };
 
@@ -160,7 +179,12 @@ export default function AirReleaseValvePlacement() {
         const labels = validPoints.map(p => p.chainage);
         const dataPoints = validPoints.map(p => p.elevation);
 
-        const peakData = highPoints.map(index => ({
+        const peakData = placementPoints.peaks.map(index => ({
+            x: validPoints[index].chainage,
+            y: validPoints[index].elevation
+        }));
+
+        const slopeChangeData = placementPoints.slopeChanges.map(index => ({
             x: validPoints[index].chainage,
             y: validPoints[index].elevation
         }));
@@ -178,11 +202,20 @@ export default function AirReleaseValvePlacement() {
                     tension: 0.1,
                 },
                 {
-                    label: 'Air Release Valve',
+                    label: 'Peak',
                     data: peakData,
                     pointBackgroundColor: 'red',
                     pointRadius: 6,
                     pointStyle: 'circle',
+                    showLine: false,
+                    type: 'scatter'
+                },
+                {
+                    label: 'Slope Change',
+                    data: slopeChangeData,
+                    pointBackgroundColor: 'blue',
+                    pointRadius: 6,
+                    pointStyle: 'rect',
                     showLine: false,
                     type: 'scatter'
                 }

@@ -213,37 +213,23 @@ th {
   /* Center text inside inputs */
 }
 
-.result-row-good td {
-  background-color: #d4edda;
+td.result-row-good {
+  background-color: #1e8d37;
   /* Muted green for good results */
   font-weight: bold;
-  color: #155724;
+  color: #000000;
 }
 
-.result-row-bad td {
-  background-color: #f8d7da;
-  /* Muted red for bad results */
-  font-weight: bold;
-  color: #721c24;
-}
-
-.result-row-good td {
-  background-color: #d4edda;
-  /* Muted green for good results */
-  font-weight: bold;
-  color: #155724;
-}
-
-.result-row-medium td {
+td.result-row-medium {
   background-color: #ffdddd;
   /* Lighter red for medium results */
   font-weight: bold;
-  color: #721c24;
+  color: #000000;
 }
 
-.result-row-bad td {
-  background-color: #f8d7da;
+td.result-row-bad {
+  background-color: #a90715;
   /* Muted red for bad results */
   font-weight: bold;
-  color: #721c24;
+  color: #000000;
 }

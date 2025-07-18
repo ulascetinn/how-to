@@ -117,28 +117,24 @@ const NeedleValve = () => {
                 return "Invalid Input";
             }
 
-            // Since zeta is inversely correlated with opening, a higher zeta means a lower opening.
-            // We look for the point where the calculated zeta fits between two points in our data.
             for (let i = 0; i < dataTable.length - 1; i++) {
-                const lowerBound = dataTable[i + 1];
-                const upperBound = dataTable[i];
-                // Check if zeta falls between the current and next data points.
-                if (zeta <= upperBound.zeta && zeta > lowerBound.zeta) {
-                    // Return the corresponding opening range.
-                    return `${lowerBound.opening}-${upperBound.opening}%`;
+                const lowerBound = dataTable[i];
+                const upperBound = dataTable[i + 1];
+                if (zeta <= lowerBound.zeta && zeta > upperBound.zeta) {
+                    return `${lowerBound.opening}-${upperBound.opening}`;
                 }
             }
 
-            // Handle edge cases.
             if (dataTable.length > 1 && zeta > dataTable[1].zeta) {
-                return `< ${dataTable[1].opening}%`; // If zeta is very high
+                return `< ${dataTable[1].opening}`;
             }
             if (zeta <= dataTable[dataTable.length - 1].zeta) {
-                return `≥ ${dataTable[dataTable.length - 1].opening}%`; // If zeta is very low
+                return `>= ${dataTable[dataTable.length - 1].opening}`;
             }
 
             return "Out of Range";
         };
+
 
         // Helper to process each case
         const processCase = (caseData) => {
@@ -154,18 +150,33 @@ const NeedleValve = () => {
         setCaseC(prev => ({ ...prev, ...processCase(prev) }));
     };
 
-    const getOpeningClass = (opening) => {
+    const getSlotlessOpeningClass = (opening) => {
         if (!opening || typeof opening !== 'string') return '';
-        const lowerBound = parseFloat(opening.split('-')[0].replace('<', '').replace('≥', '').trim());
-        if (isNaN(lowerBound)) return '';
-        if ((lowerBound >= 0 && lowerBound <= 10) || lowerBound >= 80) {
+        const value = parseFloat(opening.split('-')[0].replace('<', '').replace('>=', '').trim());
+        if (isNaN(value)) return '';
+        if ((value >= 0 && value < 10) || value === 100) {
             return 'result-row-bad';
         }
-        if (lowerBound > 10 && lowerBound < 20) {
+        if (value >= 90 && value < 100) {
             return 'result-row-medium';
         }
         return 'result-row-good';
     };
+
+    const getSlottedOpeningClass = (opening) => {
+        if (!opening || typeof opening !== 'string') return '';
+        const value = parseFloat(opening.split('-')[0].replace('<', '').replace('>=', '').trim());
+        if (isNaN(value)) return '';
+
+        if ((value >= 0 && value <= 10) || value === 100) {
+            return 'result-row-bad';
+        }
+        if ((value > 10 && value < 20) || (value >= 80 && value < 100)) {
+            return 'result-row-medium';
+        }
+        return 'result-row-good';
+    };
+
 
     return (
         <div>
@@ -262,19 +273,19 @@ const NeedleValve = () => {
                                 <td>{caseC.dpBar}</td>
                                 <td>bar</td>
                             </tr>
-                            <tr className={getOpeningClass(caseA.slotlessOpening)}>
+                            <tr>
                                 <td>Opening w/o slotter</td>
-                                <td>{caseA.slotlessOpening}</td>
-                                <td>{caseB.slotlessOpening}</td>
-                                <td>{caseC.slotlessOpening}</td>
-                                <td>%</td>
+                                <td className={getSlotlessOpeningClass(caseA.slotlessOpening)}>{caseA.slotlessOpening}</td>
+                                <td className={getSlotlessOpeningClass(caseB.slotlessOpening)}>{caseB.slotlessOpening}</td>
+                                <td className={getSlotlessOpeningClass(caseC.slotlessOpening)}>{caseC.slotlessOpening}</td>
+                                <td></td>
                             </tr>
-                            <tr className={getOpeningClass(caseA.slottedOpening)}>
+                            <tr>
                                 <td>Opening w/ slotter</td>
-                                <td>{caseA.slottedOpening}</td>
-                                <td>{caseB.slottedOpening}</td>
-                                <td>{caseC.slottedOpening}</td>
-                                <td>%</td>
+                                <td className={getSlottedOpeningClass(caseA.slottedOpening)}>{caseA.slottedOpening}</td>
+                                <td className={getSlottedOpeningClass(caseB.slottedOpening)}>{caseB.slottedOpening}</td>
+                                <td className={getSlottedOpeningClass(caseC.slottedOpening)}>{caseC.slottedOpening}</td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
