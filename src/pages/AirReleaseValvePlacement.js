@@ -6,6 +6,7 @@ import { Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title as ChartTitle, Tooltip, Legend,
 } from 'chart.js';
+import { arvBrand1, arvBrand2 } from '../utils/arvCapacities';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ChartTitle, Tooltip, Legend);
 
@@ -30,7 +31,8 @@ const processImportedData = (data) => {
 
 export default function AirReleaseValvePlacement() {
     const [tableData, setTableData] = useState([]);
-    const [fillingSpeed, setFillingSpeed] = useState('0.3');
+    const [fillingSpeed, setFillingSpeed] = useState('');
+    const [arvBrand, setArvBrand] = useState(''); // New state for ARV brand
     const [showGraph, setShowGraph] = useState(false);
     const [placementPoints, setPlacementPoints] = useState({ peaks: [], slopeChanges: [] });
     const fileInputRef = useRef(null);
@@ -62,10 +64,10 @@ export default function AirReleaseValvePlacement() {
             .catch((error) => {
                 console.error("Error fetching Excel file:", error);
                 // Default data if fetch fails.
-                const defaultData = [["Node", "Chainage", "Elevation", "Project Title"]];
-                defaultData.push(["", "", "", "Project Title"]);
+                const defaultData = [["Node", "Chainage", "Elevation", "ARV", "Project Title"]];
+                defaultData.push(["", "", "", "", "Project Title"]);
                 for (let i = 0; i < 8; i++) {
-                    defaultData.push(["", "", "", ""]);
+                    defaultData.push(["", "", "", "", ""]);
                 }
                 setTableData(defaultData);
             });
@@ -141,11 +143,50 @@ export default function AirReleaseValvePlacement() {
         setShowGraph(true);
     };
 
-    // Add 10 empty rows (each with 4 cells).
+    const handleSize = () => {
+        if (!arvBrand) {
+            alert("Please select an ARV brand.");
+            return;
+        }
+
+        const pipelineDN = parseFloat(tableData[1][5]);
+        if (isNaN(pipelineDN) || pipelineDN <= 0) {
+            alert("Please enter a valid Pipeline DN.");
+            return;
+        }
+
+        const safetyFactor = 1.1; // Safety factor for sizing
+        const dnMeters = pipelineDN / 1000;
+        const area = Math.PI * Math.pow(dnMeters / 2, 2);
+        const requiredCapacity = parseFloat(fillingSpeed) * area * 3600 * safetyFactor; // in m^3/h
+
+        const brandCapacities = arvBrand === 'Brand1' ? arvBrand1 : arvBrand2;
+
+        const newData = [...tableData];
+        const allPlacementIndices = [...placementPoints.peaks, ...placementPoints.slopeChanges];
+
+        // First, reset all ARV cells to "-"
+        for (let i = 2; i < newData.length; i++) {
+            newData[i][3] = "-";
+        }
+
+        allPlacementIndices.forEach(index => {
+            const suitableARV = brandCapacities.find(arv => arv.discharge1 >= requiredCapacity);
+            if (suitableARV) {
+                newData[index + 2][3] = `DN${suitableARV.DN}`;
+            } else {
+                newData[index + 2][3] = "No suitable ARV";
+            }
+        });
+
+        setTableData(newData);
+    };
+
+    // Add 10 empty rows (each with 5 cells).
     const handleAddRows = () => {
         if (tableData.length > 0) {
             const header = tableData[0];
-            const newRows = Array.from({ length: 10 }, () => Array(4).fill(""));
+            const newRows = Array.from({ length: 10 }, () => Array(5).fill(""));
             setTableData([...tableData, ...newRows]);
         }
     };
@@ -233,7 +274,7 @@ export default function AirReleaseValvePlacement() {
                 <thead>
                     <tr>
                         {header.map((cell, colIndex) => (
-                            <th key={colIndex} style={colIndex < 3 ? { width: "max-content", whiteSpace: "nowrap" } : {}}>
+                            <th key={colIndex} style={colIndex < 4 ? { width: "max-content", whiteSpace: "nowrap" } : {}}>
                                 {cell}
                             </th>
                         ))}
@@ -246,8 +287,8 @@ export default function AirReleaseValvePlacement() {
                         return (
                             <tr key={rowIndex}>
                                 {fullRow.map((cell, colIndex) => {
-                                    const cellStyle = colIndex < 3 ? { width: "max-content", whiteSpace: "nowrap" } : {};
-                                    const editable = editableAll ? true : (colIndex < 3);
+                                    const cellStyle = colIndex < 4 ? { width: "max-content", whiteSpace: "nowrap" } : {};
+                                    const editable = editableAll ? true : (colIndex < 4);
                                     return (
                                         <td key={colIndex} style={cellStyle}>
                                             {editable ? (
@@ -277,7 +318,7 @@ export default function AirReleaseValvePlacement() {
         plugins: {
             title: {
                 display: true,
-                text: tableData.length > 1 && tableData[1].length >= 4 ? tableData[1][3] : 'Project Title',
+                text: tableData.length > 1 && tableData[1].length >= 5 ? tableData[1][4] : 'Project Title',
             },
             legend: {
                 display: true
@@ -324,18 +365,34 @@ export default function AirReleaseValvePlacement() {
             <Header />
             <div className="container">
                 <h1>Air Release Valve Placement</h1>
-                <div style={{ marginBottom: "1em" }}>
-                    <label htmlFor="fillingSpeed" title="AWWA 51">
-                        Filling Speed (m/s):
-                    </label>
-                    <input
-                        id="fillingSpeed"
-                        type="number"
-                        value={fillingSpeed}
-                        onChange={(e) => setFillingSpeed(e.target.value)}
-                        placeholder="Recommended: 0.3-0.6 m/s"
-                        title="AWWA 51"
-                    />
+                <div style={{ marginBottom: "1em", display: "flex", alignItems: "center", gap: "1em" }}>
+                    <div>
+                        <label htmlFor="fillingSpeed" title="AWWA 51">
+                            Filling Speed (m/s):
+                        </label>
+                        <input
+                            id="fillingSpeed"
+                            type="number"
+                            value={fillingSpeed}
+                            onChange={(e) => setFillingSpeed(e.target.value)}
+                            placeholder="Recommended: 0.3-0.6 m/s"
+                            title="AWWA 51"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="arvBrand">
+                            ARV Brand:
+                        </label>
+                        <select
+                            id="arvBrand"
+                            value={arvBrand}
+                            onChange={(e) => setArvBrand(e.target.value)}
+                        >
+                            <option value="">Choose ARV Brand</option>
+                            <option value="Brand1">Brand1</option>
+                            <option value="Brand2">Brand2</option>
+                        </select>
+                    </div>
                 </div>
                 {renderTable()}
                 <div style={{ marginTop: "1em" }}>
@@ -352,6 +409,15 @@ export default function AirReleaseValvePlacement() {
                     <button onClick={handleClear}>Clear</button>
                     <button onClick={handlePlace} style={{ marginLeft: "1em" }}>
                         Place
+                    </button>
+                    <button onClick={handleSize} style={{ marginLeft: "1em" }}>
+                        Size Filling
+                    </button>
+                    <button onClick={() => { /* Sizing algorithm will be here */ }} style={{ marginLeft: "1em" }}>
+                        Size Vacuum
+                    </button>
+                    <button onClick={() => { /* Sizing algorithm will be here */ }} style={{ marginLeft: "1em" }}>
+                        Size All
                     </button>
                     <button onClick={handleAddRows} style={{ marginLeft: "1em" }}>
                         Add 10 Rows
